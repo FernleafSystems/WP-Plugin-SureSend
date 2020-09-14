@@ -1,0 +1,38 @@
+{
+  "name":              "apto/suresend",
+  "description":       "[APTO] SureSend",
+  "authors":           [
+    {
+      "name":     "Paul Goodchild",
+      "email":    "paul@paulgoodchild.me",
+      "homepage": "https://paulgoodchild.me"
+    }
+  ],
+  "license":           "MIT",
+  "keywords":          [
+  ],
+  "repositories":      [
+  ],
+  "config":            {
+    "platform": {
+      "php": "7.0"
+    }
+  },
+  "require":           {
+    "php":                                ">=7.0",
+    "fernleafsystems/wordpress-services": "^1.0.18",
+    "ext-json":                           "*"
+  },
+  "require-dev":       {
+  },
+  "minimum-stability": "dev",
+  "prefer-stable":     true,
+  "autoload":          {
+    "psr-4":    {
+      "FernleafSystems\\Wordpress\\Plugin\\SureSend\\": "src"
+    },
+    "classmap": [
+      "./legacy/"
+    ]
+  }
+}
