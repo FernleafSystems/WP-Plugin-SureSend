@@ -327,7 +327,12 @@ function wp_mail($to, $subject, $message, $headers = '', $attachments = array())
     $payload = '';
 
     // First, generate a boundary for the multipart message.
-    $boundary = base_convert(uniqid('boundary', true), 10, 36);
+    // This creates the error:Deprecated: Invalid characters passed for attempted conversion, these have been ignored
+	// $boundary = base_convert(uniqid('boundary', true), 10, 36);
+	$boundary = base_convert(
+		preg_replace( '#[^0-9]#', rand( 0, 9 ), uniqid( 'boundary', true ) ),
+		10, 36
+	);
 
     // Allow other plugins to apply body changes before creating the payload.
     $body = apply_filters('mg_mutate_message_body', $body);
