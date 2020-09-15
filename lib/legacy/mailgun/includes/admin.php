@@ -200,10 +200,7 @@
 		 */
 		public function options_page()
 		{
-			if (!@include 'options-page.php'):
-				printf(__('<div id="message" class="updated fade"><p>The options page for the <strong>Mailgun</strong> plugin cannot be displayed. The file <strong>%s</strong> is missing.  Please reinstall the plugin.</p></div>',
-					'mailgun'), dirname(__FILE__) . '/options-page.php');
-			endif;
+			require_once( __DIR__.'/options-page.php' );
 		}
 
 		/**
@@ -215,10 +212,7 @@
 		 */
 		public function lists_page()
 		{
-			if (!@include 'lists-page.php'):
-				printf(__('<div id="message" class="updated fade"><p>The lists page for the <strong>Mailgun</strong> plugin cannot be displayed. The file <strong>%s</strong> is missing.  Please reinstall the plugin.</p></div>',
-					'mailgun'), dirname(__FILE__) . '/lists-page.php');
-			endif;
+			require_once( __DIR__.'/lists-page.php' );
 		}
 
 		/**
@@ -443,17 +437,13 @@
 
 			if ((bool) $useAPI):
 				if (!function_exists('mg_api_last_error')):
-					if (!include dirname(__FILE__) . '/wp-mail-api.php'):
-						self::deactivate_and_die(dirname(__FILE__) . '/wp-mail-api.php');
-					endif;
+					require_once( __DIR__.'/wp-mail-api.php' );
 				endif;
 
 				$error_msg = mg_api_last_error();
 			else:
 				if (!function_exists('mg_smtp_last_error')):
-					if (!include dirname(__FILE__) . '/wp-mail-smtp.php'):
-						self::deactivate_and_die(dirname(__FILE__) . '/wp-mail-smtp.php');
-					endif;
+					require_once( __DIR__.'/wp-mail-smtp.php' );
 				endif;
 
 				$error_msg = mg_smtp_last_error();

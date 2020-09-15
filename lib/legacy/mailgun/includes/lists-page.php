@@ -19,7 +19,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-global $mailgun;
+require_once( __DIR__.'/mg-filter.php' );
+
+$mailgun = \FernleafSystems\Wordpress\Plugin\SureSend\Mailgun\Legacy\AptoMailgunLegacy::GetInstance();
 
 // check mailgun domain & api key
 $missing_error = '';
@@ -34,7 +36,7 @@ else:
 endif;
 
 // import available lists
-$lists_arr = $mailgun->get_lists();
+$lists_arr = empty($missing_error) ? [] : $mailgun->get_lists();
 
 ?>
 
@@ -56,11 +58,13 @@ $lists_arr = $mailgun->get_lists();
 
     <p><?php _e("{$missing_error}You must use a valid Mailgun domain name and API key to access lists", 'mailgun'); ?></p>
 
-    <div id="mailgun-lists" style="margin-top:20px;">
+	<?php if ( empty( $missing_error ) ) : ?>
+
+		<div id="mailgun-lists" style="margin-top:20px;">
 
         <?php if (!empty($lists_arr)) : ?>
 
-            <table class="wp-list-table widefat fixed striped pages">
+			<table class="wp-list-table widefat fixed striped pages">
 
                 <tr>
                     <th>List Address</th>
@@ -68,9 +72,9 @@ $lists_arr = $mailgun->get_lists();
                     <th>Shortcode</th>
                 </tr>
 
-                <?php foreach ($lists_arr as $list) : ?>
+				<?php foreach ($lists_arr as $list) : ?>
 
-                    <tr>
+					<tr>
                         <td><?php echo $list['address']; ?></td>
                         <td><?php echo $list['description']; ?></td>
                         <td>
@@ -78,18 +82,24 @@ $lists_arr = $mailgun->get_lists();
                         </td>
                     </tr>
 
-                <?php endforeach; ?>
+				<?php endforeach; ?>
 
             </table>
 
-            <h3>Multi-list subscription</h3>
-            <p>
+			<h3>Multi-list subscription</h3>
+			<p>
                 <?php _e('To allow users to subscribe to multiple lists on a single form, comma-separate the Mailgun list ids.', 'mailgun'); ?></p>
-            <p>
+			<p>
                 <?php _e('<strong>Example:</strong> <code>[mailgun id="list1@mydomain.com,list2@mydomain.com"]</code>'); ?>
             </p>
-
-        <?php endif; ?>
+		<?php else : ?>
+			<p>No Lists</p>
+		<?php endif; ?>
 
     </div>
+
+	<?php else : ?>
+		<p><?php echo $missing_error; ?></p>
+	<?php endif; ?>
+
 </div>

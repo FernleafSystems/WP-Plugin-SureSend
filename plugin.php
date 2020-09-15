@@ -29,7 +29,21 @@
  */
 
 if ( @is_file( __DIR__.'/lib/vendor/autoload.php' ) ) {
-	require_once( __DIR__.'/lib/vendor/autoload.php' );
+
+	if ( in_array( 'mailgun/mailgun.php', (array)get_option( 'active_plugins', [] ), true ) ) {
+		add_action( 'admin_notices', function () {
+			echo sprintf( '<div class="error"><h4>%s</h4><p>%s</p></div>',
+				'SureSend - The older Mailgun plugin appears to be active',
+				implode( '<br/>', [
+					"Please disable the old plugin and then this plugin will automatically take over.",
+				] )
+			);
+		} );
+	}
+	else {
+		require_once( __DIR__.'/lib/vendor/autoload.php' );
+		\FernleafSystems\Wordpress\Plugin\SureSend\Mailgun\Legacy\AptoMailgunLegacy::GetInstance();
+	}
 }
 else {
 	add_action( 'admin_notices', function () {
@@ -43,15 +57,3 @@ else {
 		);
 	} );
 }
-
-use FernleafSystems\Wordpress\Services\Services;
-
-Services::GetInstance();
-add_action( 'init', function () {
-	$sRootFile = __FILE__;
-
-	if ( !Services::WpPlugins()->isActive( 'mailgun/mailgun.php' ) ) {
-		( new \FernleafSystems\Wordpress\Plugin\SureSend\Mailgun\Legacy\Init() )->run();
-	}
-
-}, 1 );

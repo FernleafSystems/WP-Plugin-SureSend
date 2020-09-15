@@ -20,9 +20,7 @@
  */
 
 // Include MG filter functions
-if (!include dirname(__FILE__).'/mg-filter.php') {
-    Mailgun::deactivate_and_die(dirname(__FILE__).'/mg-filter.php');
-}
+require_once( __DIR__.'/mg-filter.php' );
 
 /**
  * mg_smtp_last_error is a compound getter/setter for the last error that was

@@ -56,16 +56,12 @@ class Mailgun {
 		// work properly. Fixes issues with 1.5.7+
 		if ( $this->get_option( 'useAPI' ) || ( defined( 'MAILGUN_USEAPI' ) && MAILGUN_USEAPI ) ):
 			if ( !function_exists( 'wp_mail' ) ):
-				if ( !include dirname( __FILE__ ).'/includes/wp-mail-api.php' ):
-					self::deactivate_and_die( dirname( __FILE__ ).'/includes/wp-mail-api.php' );
-				endif;
+				require_once( __DIR__.'/includes/wp-mail-api.php' );
 			endif;
 		else:
 			// Using SMTP, include the SMTP filter
 			if ( !function_exists( 'mg_smtp_mail_filter' ) ):
-				if ( !include dirname( __FILE__ ).'/includes/wp-mail-smtp.php' ):
-					self::deactivate_and_die( dirname( __FILE__ ).'/includes/wp-mail-smtp.php' );
-				endif;
+				require_once( __DIR__.'/includes/wp-mail-smtp.php' );
 			endif;
 			add_filter( 'wp_mail', 'mg_smtp_mail_filter' );
 			add_action( 'phpmailer_init', [ $this, 'phpmailer_init' ] );
